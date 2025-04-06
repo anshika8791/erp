@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF121212), // Dark background
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -48,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Login Successful")),
                     );
-                    // Navigate to dashboard or next screen
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -63,54 +62,87 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 builder: (context, state) {
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 80.0),
-                        child: Text(
-                          "Let's Get Started...",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      const SizedBox(height: 40),
+                      const Text(
+                        "Flux ERP",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "Welcome back 👋",
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      ),
+                      const SizedBox(height: 40),
+
+                      // Card-like login box
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
+                          color: const Color(0xFF1E1E1E),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
                         ),
                         child: Column(
                           children: [
-                            TextFormField(
+                            TextField(
                               controller: _usernameController,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.person),
-                                labelText: 'Username',
-                                border: OutlineInputBorder(),
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.person,
+                                  color: Colors.grey,
+                                ),
+                                hintText: 'Username',
+                                hintStyle: const TextStyle(color: Colors.grey),
+                                filled: true,
+                                fillColor: const Color(0xFF2A2A2A),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            TextFormField(
+                            const SizedBox(height: 15),
+                            TextField(
                               controller: _passwordController,
                               obscureText: true,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.lock),
-                                labelText: 'Password',
-                                border: OutlineInputBorder(),
+                              style: const TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.lock,
+                                  color: Colors.grey,
+                                ),
+                                hintText: 'Password',
+                                hintStyle: const TextStyle(color: Colors.grey),
+                                filled: true,
+                                fillColor: const Color(0xFF2A2A2A),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 20),
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed:
                                     state is AuthLoading ? null : _handleLogin,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green[700],
+                                  backgroundColor: const Color(0xFF4CAF50),
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 16,
                                   ),
@@ -126,8 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : const Text(
                                           'SIGN IN',
                                           style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -136,7 +167,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+
+                      const SizedBox(height: 16),
+
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -148,7 +181,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: const Text(
                           'Forgot Password?',
-                          style: TextStyle(color: Colors.green, fontSize: 16),
+                          style: TextStyle(
+                            color: Colors.greenAccent,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ],
