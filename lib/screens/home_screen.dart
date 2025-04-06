@@ -1,6 +1,7 @@
 import 'package:erp_app/bloc/auth_bloc.dart';
-import 'package:erp_app/bloc/auth_event.dart';
-import 'package:erp_app/bloc/auth_state.dart';
+import 'package:erp_app/bloc/auth_bloc/auth_event.dart';
+import 'package:erp_app/bloc/auth_bloc/auth_state.dart';
+import 'package:erp_app/screens/dashboard_screen.dart';
 import 'package:erp_app/screens/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SnackBar(content: Text("Login Successful")),
                     );
                     // Navigate to dashboard or next screen
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const DashboardScreen(),
+                      ),
+                    );
                   } else if (state is AuthFailure) {
                     ScaffoldMessenger.of(
                       context,

@@ -1,7 +1,7 @@
-import 'package:erp_app/bloc/auth_bloc/auth_event.dart';
-import 'package:erp_app/bloc/auth_bloc/auth_state.dart';
+import 'package:erp_app/repository/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../repository/auth_repository.dart';
+import 'auth_event.dart';
+import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository repository;
@@ -22,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final accessToken = response['access_token'];
       final sessionId = response['SessionId'];
-      final xUserId = response['X-UserId'];
+      final xUserId = response['X-UserId']; // ✅ Fix: dash, not underscore
       final xToken = response['X_Token'];
 
       // validate
