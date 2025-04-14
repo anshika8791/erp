@@ -1,5 +1,11 @@
 // screens/splash_screen.dart
+import 'package:erp_app/bloc/auth_bloc/auth_bloc.dart';
+import 'package:erp_app/bloc/auth_bloc/auth_event.dart';
+import 'package:erp_app/screens/dashboard_screen.dart';
+import 'package:erp_app/screens/splashwrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
 import 'home_screen.dart';
 
@@ -14,17 +20,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+    Future.delayed(const Duration(seconds: 3), () async {
+   
+        // User is not logged in, navigate to LoginScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SplashWrapper()),
+        );
+      
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(20, 20, 20, 0),
       body: Stack(
         children: [
           SizedBox.expand(

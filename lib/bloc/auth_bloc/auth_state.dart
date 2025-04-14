@@ -25,9 +25,11 @@ class AuthSuccess extends AuthState {
     required this.xToken,
     required this.userId,
   });
+  
 
   @override
   List<Object> get props => [accessToken, sessionId, xUserId, xToken, userId];
+  
 }
 
 class AuthFailure extends AuthState {

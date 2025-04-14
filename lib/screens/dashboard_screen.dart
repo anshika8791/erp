@@ -1,7 +1,8 @@
-import 'package:erp_app/bloc/auth_bloc.dart';
+import 'package:erp_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:erp_app/bloc/auth_bloc/auth_state.dart';
 import 'package:erp_app/bloc/profile_bloc/profile_bloc.dart';
 import 'package:erp_app/bloc/profile_bloc/profile_event.dart';
+
 import 'package:erp_app/drawer/assignment_screen.dart';
 import 'package:erp_app/drawer/calendar_screen.dart';
 import 'package:erp_app/drawer/eidentity_screen.dart';
@@ -11,6 +12,7 @@ import 'package:erp_app/repository/profile_repository.dart';
 import 'package:erp_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -200,6 +202,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             }
           }),
+
+
           _drawerItem('Assignment', Icons.assignment, () {
             Navigator.push(
               context,
@@ -218,7 +222,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               MaterialPageRoute(builder: (_) => const CalendarScreen()),
             );
           }),
-          _drawerItem('Sign Out', Icons.logout, () {
+          _drawerItem('Sign Out', Icons.logout, () async {
+            final storage = FlutterSecureStorage();
+
+// Delete one item (e.g., access token)
+          await storage.delete(key: 'accessToken');
+          await storage.delete(key: 'sessionId');
+          await storage.delete(key: 'xUserId');
+          await storage.delete(key: 'xToken');
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => const HomeScreen()),

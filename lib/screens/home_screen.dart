@@ -1,10 +1,11 @@
-import 'package:erp_app/bloc/auth_bloc.dart';
+import 'package:erp_app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:erp_app/bloc/auth_bloc/auth_event.dart';
 import 'package:erp_app/bloc/auth_bloc/auth_state.dart';
 import 'package:erp_app/screens/dashboard_screen.dart';
 import 'package:erp_app/screens/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
     if (username.isNotEmpty && password.isNotEmpty) {
+      final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+      secureStorage.write(key: 'stored_username', value: username);
+      secureStorage.write(key: 'stored_password', value: password);
       context.read<AuthBloc>().add(
         LoginRequested(username: username, password: password),
       );
