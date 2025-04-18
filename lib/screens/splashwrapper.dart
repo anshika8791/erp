@@ -19,9 +19,9 @@ class SplashWrapper extends StatelessWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         } else if (state is AuthSuccess) {
-          return const DashboardScreen(); // 👈 User is already logged in
+          return const DashboardScreen(); 
         } else {
-          return const HomeScreen(); // 👈 User must log in
+          return const HomeScreen(); 
         }
       },
     );

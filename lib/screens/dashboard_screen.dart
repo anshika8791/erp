@@ -11,6 +11,7 @@ import 'package:erp_app/models/login_response.dart'; // ✅ Add this import
 import 'package:erp_app/repository/profile_repository.dart';
 import 'package:erp_app/screens/attendance_info.dart';
 import 'package:erp_app/screens/home_screen.dart';
+import 'package:erp_app/screens/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -94,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _drawerItem('Attendance', Icons.assignment, () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const AttendanceInfo()),
+              MaterialPageRoute(builder: (_) => const Test()),
             );
           }),
           _drawerItem('E-Identity', Icons.badge, () {

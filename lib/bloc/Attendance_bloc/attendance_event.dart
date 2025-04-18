@@ -1,20 +1,20 @@
-part of 'attendance_bloc.dart';
+// part of 'attendance_bloc.dart';
 
-abstract class AttendanceEvent extends Equatable {
-  const AttendanceEvent();
+// abstract class AttendanceEvent extends Equatable {
+//   const AttendanceEvent();
 
-  @override
-  List<Object> get props => [];
-}
+//   @override
+//   List<Object> get props => [];
+// }
 
-class FetchInitialAttendanceEvent extends AttendanceEvent {}
+// class FetchInitialAttendanceEvent extends AttendanceEvent {}
 
-class FetchAttendanceForSemesterEvent extends AttendanceEvent {
-  final int semesterId;
-  final int userId;
+// class FetchAttendanceForSemesterEvent extends AttendanceEvent {
+//   final int semesterId;
+//   final int userId;
 
-  const FetchAttendanceForSemesterEvent(this.semesterId, this.userId);
+//   const FetchAttendanceForSemesterEvent(this.semesterId, this.userId);
 
-  @override
-  List<Object> get props => [semesterId, userId];
-}
+//   @override
+//   List<Object> get props => [semesterId, userId];
+// }
