@@ -1,22 +1,35 @@
-class SubjectAttendance {
-  final String subjectName;
-  final int lecture;
-  final int present;
-  final double percentage;
+class AttendanceModel {
+  String? name;
+  int? totalLeactures;
+  int? presentLeactures;
+  int? absentLeactures;
+  double? percentageAttendance;
 
-  SubjectAttendance({
-    required this.subjectName,
-    required this.lecture,
-    required this.present,
-    required this.percentage,
+  AttendanceModel({
+    this.name,
+    this.totalLeactures,
+    this.presentLeactures,
+    this.absentLeactures,
+    this.percentageAttendance,
   });
 
-  factory SubjectAttendance.fromJson(Map<String, dynamic> json) {
-    return SubjectAttendance(
-      subjectName: json['SubjectName'],
-      lecture: json['Lecture'],
-      present: json['Present'],
-      percentage: (json['Percentage'] as num).toDouble(),
+  factory AttendanceModel.fromJson(Map<String, dynamic> json) {
+    return AttendanceModel(
+      name: json['name'],
+      totalLeactures: json['totalLeactures'],
+      presentLeactures: json['presentLeactures'],
+      absentLeactures: json['absentLeactures'],
+      percentageAttendance: json['percentageAttendance']?.toDouble(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'totalLeactures': totalLeactures,
+      'presentLeactures': presentLeactures,
+      'absentLeactures': absentLeactures,
+      'percentageAttendance': percentageAttendance,
+    };
   }
 }

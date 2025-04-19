@@ -21,6 +21,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   provider: ^6.1.2
   font_awesome_flutter: ^10.8.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -33,4 +34,6 @@ flutter:
     - assets/animation.json
     - assets/centerimage2.jpeg
     - assets/animation2.json
+    - assets/loginback.json
+    - assets/splashback.json
   uses-material-design: true

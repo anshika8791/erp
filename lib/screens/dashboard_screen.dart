@@ -9,6 +9,7 @@ import 'package:erp_app/drawer/eidentity_screen.dart';
 import 'package:erp_app/drawer/profile_screen.dart';
 import 'package:erp_app/models/login_response.dart';
 import 'package:erp_app/repository/profile_repository.dart';
+import 'package:erp_app/screens/attendance_info.dart';
 import 'package:erp_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -208,6 +209,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const AssignmentScreen()),
+            );
+          }),
+          _drawerItem('Attendance', Icons.assignment, () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AttendanceInfo()),
             );
           }),
           _drawerItem('E-Identity', Icons.badge, () {
