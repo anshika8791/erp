@@ -1,8 +1,10 @@
 import 'package:erp_app/bloc/Attendance_bloc/attendance_bloc.dart';
 import 'package:erp_app/bloc/auth_bloc/auth_bloc.dart';
+import 'package:erp_app/bloc/final_attendance_Bloc/final_attendance_bloc.dart';
 import 'package:erp_app/bloc/profile_bloc/profile_bloc.dart';
 import 'package:erp_app/bloc/auth_bloc/auth_event.dart';
 import 'package:erp_app/repository/attendance_repo.dart';
+import 'package:erp_app/repository/final_attendance_repo.dart';
 import 'package:erp_app/screens/attendance_info.dart';
 import 'package:erp_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository = AuthRepository();
-  final AttendanceRepo attendanceRepository = AttendanceRepo();
+  //final AttendanceRepo attendanceRepository = AttendanceRepo();
 
   MyApp({super.key});
 
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
               AuthBloc(authRepository)..add(CheckAuthStatus()),
         ),
         
-       BlocProvider(create: (_) => AttendanceBloc())
+       BlocProvider(create: (_) => AttendanceBloc(AttendanceRepository()))
         // Add more BLoCs here if needed
       ],
       child: MaterialApp(

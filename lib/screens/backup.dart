@@ -22,6 +22,10 @@
 //   Map<int, int> semesterUserIds = {};
 //   int selectedTermId = 1;
 
+//   Map<String, Map<String, int>> subjectStats = {}; // { subjectName: { "total": x, "present": y } }
+//   int overallTotal = 0;
+//   int overallPresent = 0;
+
 //   @override
 //   void initState() {
 //     super.initState();
@@ -50,7 +54,6 @@
 //       };
 
 //       final testUrl =
-
 //           'https://erp.akgec.ac.in/api/SubjectAttendance?userFromClient=0&userId=$userId';
 //       final testResponse = await http.get(Uri.parse(testUrl), headers: headers);
 
@@ -107,19 +110,54 @@
 
 //       if (attendanceResponse.statusCode == 200) {
 //         final data = json.decode(attendanceResponse.body);
-//         final attendanceData = List<Map<String, dynamic>>.from(
-//           data['attendanceData'],
-//         );
+//         final List<Map<String, dynamic>> regularLectures =
+//             List<Map<String, dynamic>>.from(data['attendanceData'] ?? []);
+//         final List<Map<String, dynamic>> extraLectures =
+//             List<Map<String, dynamic>>.from(data['extraLectures'] ?? []);
+
+//         final Map<int, String> subjectIdToName = {};
+//         for (var entry in regularLectures) {
+//           int id = entry['subjectId'];
+//           String name = entry['subjectName'] ?? 'Unknown Subject';
+//           subjectIdToName[id] = name;
+//         }
+
+//         for (var entry in extraLectures) {
+//           int id = entry['subjectId'];
+//           if (entry['subjectName'] == null && subjectIdToName.containsKey(id)) {
+//             entry['subjectName'] = subjectIdToName[id];
+//           }
+//         }
+
+//         final combinedData = [...regularLectures, ...extraLectures];
 
 //         final Set<String> uniqueSubjects = {};
+//         subjectStats.clear();
+//         overallTotal = 0;
+//         overallPresent = 0;
 
-//         for (var entry in attendanceData) {
-//           final subjectName = entry['subjectName'] ?? 'Unknown Subject';
-//           uniqueSubjects.add(subjectName);
+//         for (var entry in combinedData) {
+//           final subject = entry['subjectName'];
+//           final isAbsent = entry['isAbsent'] == true;
+
+//           if (subject == null) continue;
+
+//           uniqueSubjects.add(subject);
+
+//           subjectStats.putIfAbsent(subject, () => {"total": 0, "present": 0});
+//           subjectStats[subject]!["total"] = subjectStats[subject]!["total"]! + 1;
+//           if (!isAbsent) {
+//             subjectStats[subject]!["present"] = subjectStats[subject]!["present"]! + 1;
+//           }
+
+//           overallTotal++;
+//           if (!isAbsent) {
+//             overallPresent++;
+//           }
 //         }
 
 //         setState(() {
-//           allAttendanceData = attendanceData;
+//           allAttendanceData = combinedData;
 //           subjectNames = uniqueSubjects.toList();
 //           isLoading = false;
 //         });
@@ -134,21 +172,35 @@
 //     }
 //   }
 
-//   List<Map<String, String>> getDateStatusListForSubject(String subjectName) {
+//   List<Map<String, String>> getGroupedAttendanceByDate(String subjectName) {
 //     final DateFormat formatter = DateFormat('dd MMM yyyy');
 
 //     final subjectData = allAttendanceData
-//         .where((entry) => entry['subjectName'] == subjectName && entry['absentDate'] != null)
+//         .where((entry) =>
+//             entry['subjectName'] == subjectName &&
+//             entry['absentDate'] != null)
 //         .toList();
 
-//     final List<Map<String, String>> dateStatusList = subjectData.map((entry) {
+//     final Map<String, List<String>> dateToStatusList = {};
+
+//     for (var entry in subjectData) {
 //       final date = formatter.format(DateTime.parse(entry['absentDate']));
-//       final status = entry['isAbsent'] == true ? 'Absent' : 'Present';
-//       return {'date': date, 'status': status};
+//       final status = entry['isAbsent'] == true ? 'A' : 'P';
+
+//       if (!dateToStatusList.containsKey(date)) {
+//         dateToStatusList[date] = [];
+//       }
+
+//       dateToStatusList[date]!.add(status);
+//     }
+
+//     final groupedList = dateToStatusList.entries.map((entry) {
+//       final combinedStatus = entry.value.join();
+//       return {'date': entry.key, 'status': combinedStatus};
 //     }).toList()
 //       ..sort((a, b) => formatter.parse(b['date']!).compareTo(formatter.parse(a['date']!)));
 
-//     return dateStatusList;
+//     return groupedList;
 //   }
 
 //   @override
@@ -177,7 +229,8 @@
 //                     selectedTermId = value;
 //                     isLoading = true;
 //                   });
-//                   String? accessToken = await secureStorage.read(key: 'accessToken');
+//                   String? accessToken =
+//                       await secureStorage.read(key: 'accessToken');
 //                   String? sessionId = await secureStorage.read(key: 'sessionId');
 //                   String? userId = await secureStorage.read(key: 'xUserId');
 //                   String? xToken = await secureStorage.read(key: 'xToken');
@@ -197,41 +250,92 @@
 //               },
 //             ),
 //           ),
-//           Expanded(
-//             child: isLoading
-//                 ? const Center(child: CircularProgressIndicator())
-//                 : subjectNames.isEmpty
-//                     ? const Center(child: Text("No subjects found."))
-//                     : ListView.builder(
-//                         itemCount: subjectNames.length,
-//                         itemBuilder: (context, index) {
-//                           final subject = subjectNames[index];
-//                           final dateStatusList = getDateStatusListForSubject(subject);
 
-//                           return ExpansionTile(
-//                             title: Text(subject),
-//                             children: dateStatusList.isEmpty
-//                                 ? [
-//                                     const ListTile(
-//                                       title: Text("No attendance data."),
-//                                     ),
-//                                   ]
-//                                 : dateStatusList.map((item) {
-//                                     final status = item['status'];
-//                                     return ListTile(
-//                                       leading: Icon(
-//                                         status == 'Absent'
-//                                             ? Icons.cancel
-//                                             : Icons.check_circle,
-//                                         color: status == 'Absent' ? Colors.red : Colors.green,
-//                                       ),
-//                                       title: Text("${item['date']} - $status"),
-//                                     );
-//                                   }).toList(),
-//                           );
-//                         },
+//           // 🧾 Overall Summary
+//           if (!isLoading && overallTotal > 0)
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+//               child: Card(
+//                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+//                 elevation: 2,
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(16),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text("📊 Overall Attendance", style: Theme.of(context).textTheme.titleMedium),
+//                       const SizedBox(height: 8),
+//                       Text("Total Classes: $overallTotal"),
+//                       Text("Total Presents: $overallPresent"),
+//                       Text(
+//                         "Overall Percentage: ${(overallPresent / overallTotal * 100).toStringAsFixed(2)}%",
+//                         style: TextStyle(
+//                           fontWeight: FontWeight.bold,
+//                           color: (overallPresent / overallTotal * 100) < 75 ? Colors.red : Colors.green,
+//                         ),
 //                       ),
-//           ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+
+//           Expanded(
+//   child: isLoading
+//       ? const Center(child: CircularProgressIndicator())
+//       : subjectNames.isEmpty
+//           ? const Center(child: Text("No subjects found."))
+//           : ListView.builder(
+//               itemCount: subjectNames.length,
+//               itemBuilder: (context, index) {
+//                 final subject = subjectNames[index];
+//                 final groupedDates = getGroupedAttendanceByDate(subject);
+
+//                 final total = subjectStats[subject]?["total"] ?? 0;
+//                 final present = subjectStats[subject]?["present"] ?? 0;
+//                 final percent = total > 0
+//                     ? (present / total * 100).toStringAsFixed(2)
+//                     : "0.00";
+
+//                 return Card(
+//                   margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+//                   shape: RoundedRectangleBorder(
+//                     borderRadius: BorderRadius.circular(12),
+//                   ),
+//                   elevation: 2,
+//                   child: ExpansionTile(
+//                     title: Text(subject, style: const TextStyle(fontWeight: FontWeight.bold)),
+//                     subtitle: Text(
+//                       "Present: $present / $total   ($percent%)",
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.w500,
+//                         color: double.parse(percent) < 75 ? Colors.red : Colors.green,
+//                       ),
+//                     ),
+//                     children: groupedDates.isEmpty
+//                         ? [
+//                             const ListTile(
+//                               title: Text("No attendance data."),
+//                             ),
+//                           ]
+//                         : groupedDates.map((item) {
+//                             final status = item['status'];
+//                             return ListTile(
+//                               leading: Icon(
+//                                 status!.contains('A')
+//                                     ? Icons.cancel
+//                                     : Icons.check_circle,
+//                                 color: status.contains('A') ? Colors.red : Colors.green,
+//                               ),
+//                               title: Text("${item['date']} - $status"),
+//                             );
+//                           }).toList(),
+//                   ),
+//                 );
+//               },
+//             ),
+// ),
+
 //         ],
 //       ),
 //     );
