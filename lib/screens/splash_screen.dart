@@ -1,13 +1,7 @@
-// screens/splash_screen.dart
-import 'package:erp_app/bloc/auth_bloc/auth_bloc.dart';
-import 'package:erp_app/bloc/auth_bloc/auth_event.dart';
-import 'package:erp_app/screens/dashboard_screen.dart';
 import 'package:erp_app/screens/splashwrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,73 +10,113 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _bgController;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () async {
-   
-        // User is not logged in, navigate to LoginScreen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const SplashWrapper()),
-        );
-      
+
+    _bgController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    )..repeat(reverse: true);
+
+    Future.delayed(const Duration(seconds: 10), () async {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SplashWrapper()),
+      );
     });
+  }
+
+  @override
+  void dispose() {
+    _bgController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(20, 20, 20, 0),
       body: Stack(
         children: [
-          SizedBox.expand(
-            child: Image.asset('assets/background.jpeg', fit: BoxFit.cover),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 80.0),
-              child: const Text(
-                'Welcome to\nEdumarshal !',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 48,
-                  height: 1.5,
-                  color: Colors.white,
-                  fontStyle: FontStyle.italic,
+          // 🍃 Animated Green Gradient Background
+          AnimatedBuilder(
+            animation: _bgController,
+            builder: (context, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.black, Colors.green.shade900],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
+
+          // 🟢 Glowing Green Orbs
+          Positioned(
+            top: 100,
+            left: 30,
+            child: _floatingOrb(80, Colors.green.withOpacity(0.15)),
+          ),
+          Positioned(
+            bottom: 120,
+            right: 40,
+            child: _floatingOrb(100, Colors.greenAccent.withOpacity(0.1)),
+          ),
+          Positioned(
+            bottom: 220,
+            left: 90,
+            child: _floatingOrb(60, Colors.lightGreenAccent.withOpacity(0.12)),
+          ),
+
+          // 🔥 Center Lottie & App Name
           Center(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 100.0),
-              child: Image.asset(
-                'assets/centerimage2.jpeg',
-                width: 400,
-                height: 400,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 100.0,
-                right: 150.0,
-                bottom: 100.0,
-              ),
-              child: Lottie.asset(
-                'assets/animation.json',
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // 🎞️ Your Lottie animation
+                Lottie.asset(
+                  'assets/splashback.json',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 30),
+
+                // 🧩 App Name with Glow
+                Text(
+                  'Prezzence',
+                  style: GoogleFonts.bungeeSpice(
+                    textStyle: TextStyle(
+                      fontSize: 50,
+                      color: const Color.fromARGB(255, 231, 236, 241),
+                      letterSpacing: .5,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // 🍏 Floating Orb Widget
+  Widget _floatingOrb(double size, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+        boxShadow: [BoxShadow(color: color, blurRadius: 30, spreadRadius: 5)],
       ),
     );
   }
