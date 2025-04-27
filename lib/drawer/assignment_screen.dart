@@ -6,14 +6,20 @@ class AssignmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Assignment"),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF2C2C2C),
+        centerTitle: true,
+        title: const Text(
+          "Assignment",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: const Center(
         child: Text(
-          "This is the Assignment Page",
-          style: TextStyle(fontSize: 20),
+          "Enjoy, No Assignments yet!!!",
+          style: TextStyle(color: Colors.green, fontSize: 20),
         ),
       ),
     );

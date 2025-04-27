@@ -32,7 +32,7 @@ class UserProfile {
               .trim(),
       contactNumber: json['smsMobileNumber'] ?? '',
       rollNumber: json['rollNumber'] ?? '',
-      semester: json['semester'] ?? '',
+      semester: json['semester']?? '',
       section: json['sectionName'] ?? '',
       dob: json['dob']?.split("T")[0] ?? '',
       address: json['address'] ?? '',

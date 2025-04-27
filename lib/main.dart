@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:erp_app/repository/auth_repository.dart';
 import 'package:erp_app/repository/profile_repository.dart';
+import 'package:erp_app/bloc/profile_bloc/profile_bloc.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +19,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final AuthRepository authRepository = AuthRepository();
+  final ProfileRepository profileRepository = ProfileRepository();
   //final AttendanceRepo attendanceRepository = AttendanceRepo();
 
   MyApp({super.key});
@@ -27,11 +29,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) =>
-              AuthBloc(authRepository)..add(CheckAuthStatus()),
+          create: (context) => AuthBloc(authRepository)..add(CheckAuthStatus()),
         ),
-        
-       BlocProvider(create: (_) => AttendanceBloc(AttendanceRepository()))
+
+        BlocProvider(create: (_) => AttendanceBloc(AttendanceRepository())),
         // Add more BLoCs here if needed
       ],
       child: MaterialApp(
